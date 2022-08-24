@@ -7,10 +7,12 @@ const client = new ApolloClient({
   uri: "/api/graphql",
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <Component {...pageProps} />;
+     
+        <Component {...pageProps} />
+      
     </ApolloProvider>
   );
 }

@@ -10,17 +10,7 @@ export const Post = objectType({
     t.date("createdAt");
     t.string("title");
     t.nullable.string("content");
-    t.boolean("published");
-    t.nullable.field("author", {
-      type: "User",
-      async resolve(_parent, _args, ctx) {
-        return await ctx.prisma.post
-          .findUnique({
-            where: { id: _parent.id },
-          })
-          .author();
-      },
-    });
+    t.boolean("published")
   },
 });
 
@@ -57,12 +47,6 @@ export const Query = objectType({
       },
     });
 
-    t.list.field("users", {
-      type: "User",
-      async resolve(_parent, _args, ctx) {
-        return await ctx.prisma.user.findMany();
-      },
-    });
 
     t.list.field("filterPosts", {
       type: "Post",
@@ -86,22 +70,6 @@ export const Query = objectType({
 export const Mutation = objectType({
   name: "Mutation",
   definition(t) {
-    t.field("signupUser", {
-      type: "User",
-      args: {
-        name: stringArg(),
-        email: nonNull(stringArg()),
-      },
-      async resolve(_, { name, email }, ctx) {
-        return await ctx.prisma.user.create({
-          data: {
-            name,
-            email,
-          },
-        });
-      },
-    });
-
     t.nullable.field("deletePost", {
       type: "Post",
       args: {
@@ -119,17 +87,13 @@ export const Mutation = objectType({
       args: {
         title: nonNull(stringArg()),
         content: stringArg(),
-        authorEmail: stringArg(),
       },
-      async resolve(_, { title, content, authorEmail }, ctx) {
+      async resolve(_, { title, content }, ctx) {
         return await ctx.prisma.post.create({
           data: {
             title,
             content,
             published: false,
-            author: {
-              connect: { email: authorEmail },
-            },
           },
         });
       },
