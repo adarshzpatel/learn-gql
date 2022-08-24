@@ -10,7 +10,7 @@ export const Post = objectType({
     t.date("createdAt");
     t.string("title");
     t.nullable.string("content");
-    t.boolean("published")
+    t.boolean("published");
   },
 });
 
@@ -47,7 +47,6 @@ export const Query = objectType({
       },
     });
 
-
     t.list.field("filterPosts", {
       type: "Post",
       args: {
@@ -82,32 +81,19 @@ export const Mutation = objectType({
       },
     });
 
-    t.field("createDraft", {
+    t.field("createPost", {
       type: "Post",
       args: {
         title: nonNull(stringArg()),
-        content: stringArg(),
+        content: nonNull(stringArg()),
       },
       async resolve(_, { title, content }, ctx) {
         return await ctx.prisma.post.create({
           data: {
             title,
             content,
-            published: false,
+            published: true,
           },
-        });
-      },
-    });
-
-    t.nullable.field("publish", {
-      type: "Post",
-      args: {
-        postId: stringArg(),
-      },
-      async resolve(_, { postId }, ctx) {
-        return await ctx.prisma.post.update({
-          where: { id: Number(postId) },
-          data: { published: true },
         });
       },
     });
