@@ -1,11 +1,14 @@
-import type { NextPage } from 'next'
+import type { NextPage } from "next";
 
-const Home: NextPage = () => {
+type Props = {
+  launches: any;
+};
+
+const Home: NextPage<Props> = ({ launches}) => {
   return (
-  <div>
+    <div></div>
+  );
+};
 
-  </div>
-  )
-}
+export default Home;
 
-export default Home
